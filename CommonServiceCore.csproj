@@ -26,4 +26,8 @@
     <None Include="CommonServiceCore.sln" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DockerBuild\" />
+  </ItemGroup>
+
 </Project>

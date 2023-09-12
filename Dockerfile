@@ -1,20 +1,16 @@
-﻿# Use the official .NET SDK image as the base image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-WORKDIR /app
-EXPOSE 80
-
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY ["CommonServiceCore/CommonServiceCore.csproj", "CommonServiceCore/"]
-RUN dotnet restore "CommonServiceCore/CommonServiceCore.csproj"
+﻿#Build Stage
+FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
+WORKDIR /source
 COPY . .
-WORKDIR "/src/CommonServiceCore"
-RUN dotnet build "CommonServiceCore.csproj" -c Release -o /app/build
+RUN dotnet restore "./CommonServiceCore/CommonServiceCore.csproj" --disable-parallel
+RUN dotnet publish "./CommonServiceCore/CommonServiceCore.csproj" -c Release -o /app --no-restore
 
-FROM build AS publish
-RUN dotnet publish "CommonServiceCore.csproj" -c Release -o /app/publish
-
-FROM base AS final
+#Serve Stage
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app ./
+
+EXPOSE 5000
+
 ENTRYPOINT ["dotnet", "CommonServiceCore.dll"]
+
