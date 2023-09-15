@@ -21,5 +21,11 @@ namespace CommonServiceCore.Services
         {
             return _tokenValidation.GenerateToken(value);
         }
+
+        public string FunctionPerkalian(int harga, int qty)
+        {
+            int hasil = harga * qty;
+            return "";
+        }
     }
 }

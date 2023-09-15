@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using CommonServiceCore.Interfaces;
 using CommonServiceCore.Models;
 using Newtonsoft.Json.Linq;
+using CommonServiceCore.Services;
 
 
 namespace CommonServiceCore.Controllers
@@ -16,6 +17,21 @@ namespace CommonServiceCore.Controllers
         public TokenValidationController(ITokenValidationService TokenValidationService)
         {
             _TokenValidationService = TokenValidationService;
+        }
+
+        [HttpPost]
+        [Route("ValidationToken")]
+        public async Task<IActionResult> ValidationTokenTest(TokenAttributes value)
+        {
+            TokenValidationServices obj = new TokenValidationServices();
+            try
+            {
+                return Ok(await TokenValidationServices.get);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
